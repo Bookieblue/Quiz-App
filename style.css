@@ -444,6 +444,7 @@ label{
     height: 100vh;
     text-align: justify;
     display: flex;
+    padding:0 30px ;
 }
 
 .contact{
@@ -451,6 +452,7 @@ label{
     text-align: justify;
     display: flex;
     /* flex-direction: column; */
+    padding:0 30px ;
 }
 
 .about .text{
