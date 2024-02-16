@@ -441,25 +441,16 @@ label{
 }
 
 .about{
-    background-color:whitesmoke;
-    padding: 30px 70px;
     height: 100vh;
     text-align: justify;
     display: flex;
-    /* flex-direction: column; */
-    justify-content: center;
-    align-items: center;
 }
 
 .contact{
-    background-color:whitesmoke;
     height: 100vh;
-    padding: 30px 70px ;
     text-align: justify;
     display: flex;
     /* flex-direction: column; */
-    justify-content: center;
-    align-items: center;
 }
 
 .about .text{
@@ -468,7 +459,7 @@ label{
 
 .contact-text{
     width:100%;
-    margin-left: 30px;
+    margin: 30px;
 }
 
 .about p{
@@ -558,6 +549,40 @@ label{
        right:0;
        padding:20px;
     }
+
+    .ig-container{
+        display: none;
+    }
+
+    .about, .contact{
+        padding: 20px 10px;
+        height: auto;
+    }
+
+    .contact-text{
+        margin-left:0;
+        padding: 10px;
+    }
+    
+    .form-group input[type="text"], .form-group input[type="email"], .form-group textarea {
+        width: 100%;
+    }
+
+    .img-container{
+        display: none;
+    }
+
+    .form{
+        width: 80%;
+    }
+
+    .btn-signup{
+        font-size: 14px;
+    }
+
+    .btn-google{
+        font-size: 14px;
+    }
 } 
 
 @media (max-width: 500px){
@@ -584,3 +609,4 @@ label{
 }
 
 }
+
