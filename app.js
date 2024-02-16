@@ -1,78 +1,102 @@
+// Define listContainer variable
 const listContainer = document.querySelector('.question-container');
+
+let quizquestions = []; 
 
 // Object to store selected option for each question
 const selectedOptions = {};
 
+// Adding click event listener to the listContainer
 listContainer.addEventListener("click", (e) => {
-    if (e.target.tagName === "LI") {
-        const clickedOption = e.target;
-        const questionContainer = clickedOption.closest('.question-container');
-        const questionId = questionContainer.getAttribute('data-question-id');
+  if (e.target.tagName === "LI") {
+      const clickedOption = e.target;
+      const questionContainer = clickedOption.closest('.question-container');
+      const questionId = questionContainer.getAttribute('data-question-id');
 
-        // Deselect all other options in the same question
-        const questionOptions = questionContainer.querySelectorAll('li');
-        questionOptions.forEach(option => {
-            if (option !== clickedOption) {
-                option.classList.remove("checked");
-            }
-        });
+      // Deselect all other options in the same question
+      const questionOptions = questionContainer.querySelectorAll('li');
+      questionOptions.forEach(option => {
+          if (option !== clickedOption) {
+              option.classList.remove("checked");
+          }
+      });
 
-        // Toggle the clicked option
-        clickedOption.classList.toggle("checked");
+      // Toggle the clicked option
+      clickedOption.classList.toggle("checked");
 
-        // Save the selected option for the question
-        selectedOptions[questionId] = clickedOption.classList.contains("checked")
-            ? clickedOption.textContent
-            : null;
+      // Save the selected option for the question
+      selectedOptions[questionId] = clickedOption.classList.contains("checked")
+          ? clickedOption.textContent
+          : null;
 
-        saveData();
-    } else if (e.target.tagName === "SPAN") {
-        e.target.parentElement.remove();
-        saveData();
-    }
+
+  } else if (e.target.tagName === "SPAN") {
+      e.target.parentElement.remove();
+  
+  }
 }, false);
+
 
 // Function to load questions from the API
 async function loadQuestions() {
-    const APIUrl = "https://opentdb.com/api.php?amount=10&category=23";
-    const result = await fetch(`${APIUrl}`);
-    const data = await result.json();
-    console.log(data);
-    let quizquestions = data.results;
+  const APIUrl = "https://opentdb.com/api.php?amount=10&category=23";
+  const result = await fetch(`${APIUrl}`);
+  const data = await result.json();
+  console.log(data);
+  quizquestions = data.results; // Assign quizquestions in the outer scope
 
-    quizquestions.forEach((data, index) => {
-        let questions = data.question;
-        let correctAnswer = data.correct_answer;
-        let incorrectAnswer = data.incorrect_answers;
-        let optionslist = [...incorrectAnswer];
-        optionslist.splice(
-            Math.floor(Math.random() * (incorrectAnswer.length + 1)),
-            0,
-            correctAnswer
-        );
+  quizquestions.forEach((data, index) => {
+      let question = data.question;
+      let correctAnswer = data.correct_answer;
+      let incorrectAnswers = data.incorrect_answers;
+      let optionsList = [...incorrectAnswers, correctAnswer]; // Include correct answer in the options list
 
-        // Create separate elements for each question and its options
-        let questionContainer = document.createElement("div");
-        questionContainer.classList.add("question-container");
-        questionContainer.setAttribute("data-question-id", index + 1);
+      // Shuffle options list
+      for (let i = optionsList.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [optionsList[i], optionsList[j]] = [optionsList[j], optionsList[i]];
+      }
 
-        let questionElement = document.createElement("p");
-        let optionsElement = document.createElement("ul");
+      // Create separate elements for each question and its options
+      let questionContainer = document.createElement("div");
+      questionContainer.classList.add("question-container");
+      questionContainer.setAttribute("data-question-id", index + 1);
 
-        questionElement.innerHTML = `<p> ${index + 1}. ${questions}</p>`;
-        optionsElement.innerHTML = optionslist
-            .map((option) => `<li>${option}</li>`)
-            .join("");
+      let questionElement = document.createElement("p");
+      let optionsElement = document.createElement("ul");
 
-        // Append elements to the document
-        questionContainer.appendChild(questionElement);
-        questionContainer.appendChild(optionsElement);
-        listContainer.appendChild(questionContainer);
-    });
+      questionElement.innerHTML = `<p> ${index + 1}. ${question}</p>`;
+      optionsList.forEach((option, i) => {
+          const optionItem = document.createElement("li");
+          optionItem.textContent = option;
+          optionItem.addEventListener("click", () => {
+              handleAnswer(option, correctAnswer, quizquestions);
+          });
+          optionsElement.appendChild(optionItem);
+      });
+
+      // Append elements to the document
+      questionContainer.appendChild(questionElement);
+      questionContainer.appendChild(optionsElement);
+      listContainer.appendChild(questionContainer);
+  });
+}
+
+function handleAnswer(selectedAnswer, correctAnswer, quizquestions) {
+  if (selectedAnswer === correctAnswer) {
+      console.log("Correct!");
+      // Handle correct answer behavior
+  } else {
+      console.log("Incorrect!");
+      // Handle incorrect answer behavior
+  }
 }
 
 // Call the function to load questions when needed
 loadQuestions();
+
+
+
 
 //Timer starts here
   let timer = document.querySelector('.timer');
@@ -112,7 +136,7 @@ loadQuestions();
     // Fiterate through selectedOptions and compare with correct answers
     let score = 0;
     for (const questionId in selectedOptions) {
-      // Your scoring logic here
+      // scoring logic here
       // For simplicity, let's assume 1 point per correct answer
       if (selectedOptions[questionId] === correctAnswerForQuestion(questionId)) {
         score++;
@@ -122,46 +146,48 @@ loadQuestions();
   }
   
   function correctAnswerForQuestion(questionId) {
-    // Your logic to get the correct answer for a question based on questionId
-    // This depends on how your questions are structured
-    // For example, you might have an array of questions where each question has a correct answer
+    // logic to get the correct answer for a question based on questionId
     return quizquestions[questionId - 1].correct_answer;
   }
 
-  //for modal
-  const submitButton = document.getElementById('submitButton');
-  
- function showModal(totalScore) {
-  const modal = document.getElementById('scoreModal');
-  const scoreText = document.getElementById('scoreText');
-
-  scoreText.textContent = `Your Total Score is: ${totalScore}`;
-
-  modal.style.display = 'block';
- 
-}
 
 
- submitButton.addEventListener('click', (event) => showScoreModal(event));
+  // Function to show the score modal
   function showScoreModal(event) {
-    event.preventDefault(); // Prevent the default form submission behavior
     clearInterval(timerInterval); // Stop the timer
     const totalScore = calculateTotalScore();
     showModal(totalScore);
+    event.preventDefault(); 
   }
 
-  
- const closeButton = document.querySelector('.close');
- closeButton.addEventListener('click', () => {
+  // Function to show the modal
+function showModal(totalScore) {
   const modal = document.getElementById('scoreModal');
-  modal.style.display = 'none';
-});
+  const scoreText = document.getElementById('scoreText');
+  scoreText.textContent = `Your Total Score is: ${totalScore}`;
+  modal.style.display = 'block';
+}
 
-
+//Quiz form submit event listener
 const quizForm = document.getElementById('quizForm');
 quizForm.addEventListener('submit', (event) => {
-  event.preventDefault(); // Prevent the default form submission behavior
-  showScoreModal();
+    event.preventDefault(); 
+    showScoreModal();
+    saveData();
 });
+
   
+// Submit button click event listener
+const submitButton = document.getElementById('submitButton');
+submitButton.addEventListener('click', showScoreModal);
+
   
+// Close button click event listener
+const closeButton = document.querySelector('.close');
+closeButton.addEventListener('click', () => {
+    const modal = document.getElementById('scoreModal');
+    modal.style.display = 'none';
+});;
+
+
+
