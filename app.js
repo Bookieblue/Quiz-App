@@ -95,6 +95,8 @@ const selectedCategory = queryParams.get("category");
 
 // Function to load questions from the API
 async function loadQuestions() {
+
+  try {
   const categoryMap = {
     "Mathematics": 19,
     "Sports": 21,
@@ -123,6 +125,10 @@ if (subheader) {
 
   // Fetch data from the API
   const result = await fetch(APIUrl);
+  // Check if the response is successful
+    if (!result.ok) {
+      throw new Error("Oops! Trouble loading questions. Reload this page or try again later!");
+    }
   const data = await result.json();
 
   // Clear existing questions
@@ -168,7 +174,20 @@ if (subheader) {
     questionContainer.appendChild(optionsElement);
     listContainer.appendChild(questionContainer);
   });
+ } catch (error) {
+    // Display error message
+    const errorMessage = document.createElement("p");
+    errorMessage.textContent = error.message;
+    errorMessage.classList.add("error-message"); // Add a class for styling
+    listContainer.appendChild(errorMessage);
+  }
 }
+
+   
+
+
+
+
 
 function handleAnswer(selectedAnswer, correctAnswer) {
   if (selectedAnswer === correctAnswer) {
@@ -290,3 +309,4 @@ if (closeButton) {
     modal.style.display = "none";
   });
 }
+

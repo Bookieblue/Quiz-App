@@ -551,6 +551,7 @@ label{
     font-size: 16px;
     margin-top: 5px;
 }
+
 .form-group button:hover {
     background-color: #0056b3;
 }
@@ -560,6 +561,15 @@ label{
     margin:0 auto ;
     position: relative;
 }
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+
+
 @media (max-width: 1000px) {
     .list-link, .reg{
         display: none;
