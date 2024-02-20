@@ -9,11 +9,13 @@
 <body>
     <section class="quiz-container">
         <div class="quiz-header">
-            <div class="sub-header">
-                <h3>History</h3>
-                <p>This quiz is time 10mins</p>
+            <div class="quiz-wrapper">
+                <div class="sub-header">
+                    <h3 id="category-subheader"></h3>
+                    <p>This quiz is time 5mins</p>
+                </div>
+                <p class="timer"><!--09:00--></p>
             </div>
-            <p class="timer"><!--09:00--></p>
         </div>
         <div class="question-list">
         <form id="quizForm">
@@ -29,17 +31,22 @@
                  </ul>
             </div>
         </div>  
-        <button class="btn" type="submit" id="submitButton" onclick="showScoreModal(event)"><a href="">Submit</a></button> 
+        <button class="btn" type="submit" id="submitButton"><a href="#">Submit</a></button> 
         </form> 
         </div>
         <!-- Modal -->
        <div id="scoreModal" class="modal">
-       <div class="modal-content">
         <span class="close"><a href="../index.html">&times;</a></span>
+       <div class="modal-content">
         <p id="scoreText">Your Total Score is: </p>
+        <p>Quiz completed, well done.</p>
+        <div class="btns">
+            <button><a href="./course.html">Try again? </a></button>
+            <button><a href="../index.html">Back to Home </a></button>
+        </div>
     </div>
        </div>
     </section>
-    <script src="../app.js"></script>
+    <script src="../app.js" defer></script>
 </body>
 </html>
